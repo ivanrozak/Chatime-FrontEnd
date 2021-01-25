@@ -13,6 +13,7 @@
           <b-form-input
             id="input-2"
             type="email"
+            v-model="form.user_email"
             placeholder="Enter email"
             required
           ></b-form-input>
@@ -27,6 +28,7 @@
           <b-form-input
             id="input-3"
             type="password"
+            v-model="form.user_password"
             placeholder="Enter password"
             required
           ></b-form-input>
@@ -48,6 +50,35 @@
     </div>
   </div>
 </template>
+
+<script>
+import { mapActions } from "vuex";
+export default {
+  name: "Login",
+  data() {
+    return {
+      form: {
+        user_name: "",
+        user_password: ""
+      }
+    };
+  },
+  methods: {
+    ...mapActions(["login"]),
+    onSubmit() {
+      this.login(this.form)
+        .then(result => {
+          console.log(result);
+          alert("success login");
+          this.$router.push("/chatPage");
+        })
+        .catch(err => {
+          alert(err.data.msg);
+        });
+    }
+  }
+};
+</script>
 
 <style scoped>
 .main {

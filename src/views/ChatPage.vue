@@ -6,7 +6,7 @@
           <b-navbar-brand class="base-c"
             ><strong>Telegram</strong></b-navbar-brand
           >
-          <b-dropdown right variant="bg-transparent" class="ml-auto"
+          <b-dropdown right variant="none" class="ml-auto" no-caret
             ><template slot="button-content"
               ><b-icon class="base-c" icon="text-left"></b-icon
             ></template>
@@ -93,6 +93,16 @@
 </template>
 
 <style scoped>
+.dropdown-container select {
+  /* for Firefox */
+  /* for Safari, Chrome, Opera */
+  -webkit-appearance: none;
+}
+
+/* for IE10 */
+.dropdown-container select::-ms-expand {
+  display: none;
+}
 .left {
   /* border-right: 2px solid rgb(194, 193, 193); */
   height: 100%;

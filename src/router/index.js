@@ -1,17 +1,12 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Login from "../views/Login.vue";
 import Maps from "../views/Maps.vue";
 import Chat from "../views/Chat.vue";
+import store from "../store";
 
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: "/",
-    name: "Login",
-    component: Login
-  },
   {
     path: "/maps",
     name: "Maps",
@@ -25,7 +20,8 @@ const routes = [
   {
     path: "/chatpage",
     name: "ChatPage",
-    component: () => import("../views/ChatPage.vue")
+    component: () => import("../views/ChatPage.vue"),
+    meta: { requiresAuth: true }
   },
   {
     path: "/profile",
@@ -33,9 +29,10 @@ const routes = [
     component: () => import("../views/Profile.vue")
   },
   {
-    path: "/loginpage",
+    path: "/",
     name: "LoginPage",
-    component: () => import("../views/auth/LoginPage.vue")
+    component: () => import("../views/auth/LoginPage.vue"),
+    meta: { requiresVisitor: true }
   },
   {
     path: "/register",
@@ -60,4 +57,25 @@ const router = new VueRouter({
   routes
 });
 
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isLogin) {
+      next({
+        path: "/"
+      });
+    } else {
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.requiresVisitor)) {
+    if (store.getters.isLogin) {
+      next({
+        path: "/chatpage"
+      });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 export default router;

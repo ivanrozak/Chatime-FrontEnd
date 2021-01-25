@@ -3,7 +3,7 @@
     <b-container class="register">
       <b-row class="text-center">
         <b-col cols="1"
-          ><router-link to="/loginpage"
+          ><router-link to="/"
             ><h4><b-icon icon="chevron-left"></b-icon></h4></router-link
         ></b-col>
         <b-col cols="10"><h4>Register</h4></b-col>
@@ -19,6 +19,7 @@
           <b-form-input
             id="input-1"
             type="text"
+            v-model="form.user_name"
             placeholder="Enter your name"
             required
           ></b-form-input>
@@ -32,6 +33,7 @@
           <b-form-input
             id="input-2"
             type="email"
+            v-model="form.user_email"
             placeholder="Enter email"
             required
           ></b-form-input>
@@ -45,6 +47,7 @@
           <b-form-input
             id="input-3"
             type="password"
+            v-model="form.user_password"
             placeholder="Enter password"
             required
           ></b-form-input>
@@ -54,13 +57,50 @@
           ><strong>Register</strong></b-button
         >
         <h6><span>Register with</span></h6>
-        <b-button type="google" class="google"
+        <b-button type="google" class="google" @click.prevent="googleReg()"
           ><b-icon icon="google"></b-icon><strong> Google</strong></b-button
         >
       </b-form>
     </b-container>
   </div>
 </template>
+
+<script>
+import { mapActions } from "vuex";
+export default {
+  name: "Register",
+  data() {
+    return {
+      form: {
+        user_name: "",
+        user_email: "",
+        user_password: ""
+      }
+    };
+  },
+  methods: {
+    ...mapActions(["registerUser"]),
+    onSubmit() {
+      if (
+        this.form.user_name === "" ||
+        this.form.user_password === "" ||
+        this.form.user_email === ""
+      ) {
+        return this.dangerToast("Please fill All Data");
+      } else {
+        this.registerUser(this.form)
+          .then(result => {
+            alert(result.data.msg);
+            this.$router.push("/");
+          })
+          .catch(err => {
+            alert(err.data.msg);
+          });
+      }
+    }
+  }
+};
+</script>
 
 <style scoped>
 .main {
