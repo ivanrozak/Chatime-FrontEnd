@@ -76,7 +76,7 @@ export default {
     logout(context) {
       localStorage.removeItem("token");
       context.commit("delUser");
-      router.push("/login");
+      router.push("/");
     },
     interceptorRequest(context) {
       console.log("interceptor request works!");

@@ -11,23 +11,111 @@
               ><b-icon class="base-c" icon="text-left"></b-icon
             ></template>
 
-            <b-dropdown-item href="#" variant="primary"
+            <b-dropdown-item @click="toProfilePage()" variant="primary"
               ><b-icon icon="gear-fill" class="mr-2 base-c"></b-icon>
               Settings</b-dropdown-item
             >
-            <b-dropdown-item href="#" variant="primary"
+            <b-dropdown-item
+              @click.prevent="modalFriendList = !modalFriendList"
+              variant="primary"
               ><b-icon icon="person" class="mr-2 base-c"></b-icon
               >Contacts</b-dropdown-item
             >
-            <b-dropdown-item href="#" variant="primary"
+            <b-modal v-model="modalFriendList" ref="modal" title="List Friends">
+              <div v-for="(item, index) in friendList" :key="index">
+                <b-container fluid>
+                  <b-row>
+                    <b-col cols="3" style="text-align:center">
+                      <img
+                        style="width: 80px; height: 80px; border-radius: 15px;"
+                        v-if="!item.user_image"
+                        src="../assets/blank-profile-picture-973460_1280.png"/>
+                      <img
+                        style="width: 80px; height: 80px; border-radius: 15px;"
+                        id="imageUploads"
+                        class="imgUpload"
+                        v-if="item.user_image"
+                        :src="'http://localhost:3000/users/' + item.user_image"
+                    /></b-col>
+                    <b-col>
+                      <br />
+                      <strong>{{ item.user_name }}</strong> <br />
+                      {{ item.user_email }}
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </div>
+            </b-modal>
+            <b-dropdown-item
+              @click.prevent="modalInviteFriend = !modalInviteFriend"
+              variant="primary"
               ><b-icon icon="person-plus" class="mr-2 base-c"></b-icon>Invite
               friends</b-dropdown-item
             >
+            <b-modal
+              v-model="modalInviteFriend"
+              ref="modal"
+              title="Add New Friends"
+              hide-footer
+            >
+              <form ref="form">
+                <b-form-group
+                  label="Input Friend Email"
+                  label-for="name-input"
+                  invalid-feedback="Email is required"
+                >
+                  <b-form-input
+                    id="name-input"
+                    v-model="formFriend.friend_email"
+                    required
+                  ></b-form-input>
+                </b-form-group>
+              </form>
+              <b-button @click.prevent="addFriend" variant="success"
+                >Add Friend</b-button
+              >
+            </b-modal>
+            <b-dropdown-item
+              @click.prevent="modalReqFriend = !modalReqFriend"
+              variant="primary"
+              ><b-icon icon="person-plus" class="mr-2 base-c"></b-icon>Friend
+              request</b-dropdown-item
+            >
+            <b-modal
+              v-model="modalReqFriend"
+              ref="modal"
+              title="Add New Friends"
+              hide-footer
+            >
+              <div v-for="(item, index) in friendList" :key="index">
+                <b-container fluid>
+                  <b-row>
+                    <b-col cols="3" style="text-align:center">
+                      <img
+                        style="width: 80px; height: 80px; border-radius: 15px;"
+                        v-if="!item.user_image"
+                        src="../assets/blank-profile-picture-973460_1280.png"/>
+                      <img
+                        style="width: 80px; height: 80px; border-radius: 15px;"
+                        id="imageUploads"
+                        class="imgUpload"
+                        v-if="item.user_image"
+                        :src="'http://localhost:3000/users/' + item.user_image"
+                    /></b-col>
+                    <b-col>
+                      <br />
+                      <strong>{{ item.user_name }}</strong> <br />
+                      {{ item.user_email }}
+                    </b-col>
+                  </b-row>
+                </b-container>
+              </div>
+            </b-modal>
             <b-dropdown-item href="#" variant="primary"
               ><b-icon icon="question-circle" class="mr-2 base-c"></b-icon
               >Telegram faq</b-dropdown-item
             >
-            <b-dropdown-item href="#" variant="primary"
+            <b-dropdown-item @click.prevent="logouts()" variant="primary"
               ><b-icon icon="box-arrow-left" class="mr-2 base-c"></b-icon
               >Logout</b-dropdown-item
             >
@@ -42,14 +130,27 @@
         </div>
         <hr />
         <div class="list-chat">
-          <div class="chat-room">
+          <div v-for="(item, index) in listRoom" :key="index" class="chat-room">
             <img
               class="avatar"
-              src="../assets/celanachino_cupachino_denissopandi_38_900x.jpg"
+              v-if="!item.user_image"
+              src="../assets/blank-profile-picture-973460_1280.png"
+            />
+            <img
+              class="avatar"
+              v-if="item.user_image"
+              :src="'http://localhost:3000/users/' + item.user_image"
             />
             <div class="chat-room-content">
-              <h6><strong>Nama Room</strong></h6>
-              <p><small>isi chat</small></p>
+              <h6>
+                <strong>{{ item.user_name }}</strong>
+              </h6>
+              <p>
+                <small>{{ item.lastChat.message }}</small>
+              </p>
+              <p>
+                <small>{{ "room_id :" + item.lastChat.room_id }}</small>
+              </p>
             </div>
             <div class="time">
               <p><small>24:00</small></p>
@@ -65,8 +166,10 @@
             src="../assets/celanachino_cupachino_denissopandi_38_900x.jpg"
           />
           <div class="chat-room-content">
-            <h6><strong>Nama Room</strong></h6>
-            <p><small>isi chat</small></p>
+            <h6>
+              <strong>{{ listRoom[0].user_name }}</strong>
+            </h6>
+            <p><small>online</small></p>
           </div>
         </div>
         <div class="chat-content">
@@ -87,24 +190,86 @@
             <b-icon class="icon-small" icon="cursor-fill"></b-icon>
           </div>
         </div>
+        <button @click.prevent="test()">test</button>
       </b-col>
     </b-row>
   </div>
 </template>
 
+<script>
+import { mapActions, mapGetters } from "vuex";
+export default {
+  data() {
+    return {
+      modalInviteFriend: false,
+      modalReqFriend: false,
+      modalFriendList: false,
+      formFriend: {
+        friend_email: ""
+      }
+    };
+  },
+  created() {
+    this.getFriendList(this.user.user_id);
+    this.getListRooms(this.user.user_id);
+  },
+  mounted() {},
+  computed: {
+    ...mapGetters({
+      user: "setUser",
+      friendByEmail: "getFriendByEmail",
+      friendList: "getterFriendList",
+      listRoom: "getRoom",
+      messages: "getMessage"
+    })
+  },
+  methods: {
+    ...mapActions([
+      "getFriendByEmails",
+      "addFriends",
+      "getFriendList",
+      "logout",
+      "getListRooms",
+      "getDataChats",
+      "postChats"
+    ]),
+    getFriendByEmail() {
+      this.getFriendByEmails(this.formFriend.friend_email)
+        .then(result => {
+          alert(result);
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+    addFriend() {
+      this.getFriendByEmail();
+      const data = {
+        user_id: this.user.user_id,
+        friend_id: this.friendByEmail.user_id
+      };
+      this.addFriends(data)
+        .then(result => {
+          alert(result);
+        })
+        .catch(error => {
+          alert(error);
+        });
+    },
+    logouts() {
+      this.logout();
+    },
+    toProfilePage() {
+      this.$router.push("profile");
+    },
+    test() {
+      console.log(this.listRoom);
+    }
+  }
+};
+</script>
 <style scoped>
-.dropdown-container select {
-  /* for Firefox */
-  /* for Safari, Chrome, Opera */
-  -webkit-appearance: none;
-}
-
-/* for IE10 */
-.dropdown-container select::-ms-expand {
-  display: none;
-}
 .left {
-  /* border-right: 2px solid rgb(194, 193, 193); */
   height: 100%;
 }
 .right {
