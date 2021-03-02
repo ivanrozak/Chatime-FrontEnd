@@ -1,8 +1,8 @@
 <template>
   <div class="main">
     <div class="login">
-      <h4 class="centered">Login</h4>
-      <p class="mt-4"><strong>Hi, Welcome back!</strong></p>
+      <h4 class="centered f-bold">Login</h4>
+      <p class="mt-4 f-bold">Hi, Welcome back!</p>
       <b-form @submit.prevent="onSubmit">
         <b-form-group
           id="input-group-2"
@@ -38,10 +38,10 @@
             ><p>Forgot password?</p></router-link
           >
         </div>
-        <b-button type="submit" class="submit"><strong>Login</strong></b-button>
+        <b-button type="submit" class="submit">Login</b-button>
         <h6><span>Login with</span></h6>
         <b-button type="google" class="google"
-          ><b-icon icon="google"></b-icon><strong> Google</strong></b-button
+          ><b-icon icon="google"></b-icon> Google</b-button
         >
         <p class="mt-3 centered">
           Didn't have account? <router-link to="/register">Sign Up</router-link>
@@ -53,7 +53,9 @@
 
 <script>
 import { mapActions } from "vuex";
+import Alert from "../../mixins/Alert";
 export default {
+  mixins: [Alert],
   name: "Login",
   data() {
     return {
@@ -69,11 +71,11 @@ export default {
       this.login(this.form)
         .then(result => {
           console.log(result);
-          alert("success login");
+          this.AlertSucces("success login");
           this.$router.push("/chatPage");
         })
         .catch(err => {
-          alert(err.data.msg);
+          this.AlertError(err.data.msg);
         });
     }
   }
@@ -99,7 +101,6 @@ export default {
 }
 h4 {
   color: #7e98df;
-  font-weight: bold;
 }
 button {
   width: 100%;

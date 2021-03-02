@@ -9,7 +9,10 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import * as VueGoogleMaps from "vue2-google-maps";
 import VueGeolocation from "vue-browser-geolocation";
+import VueSweetalert2 from "vue-sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
+Vue.use(VueSweetalert2);
 Vue.use(VueGeolocation);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);

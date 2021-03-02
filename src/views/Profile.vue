@@ -37,10 +37,27 @@
         <label>Bio</label>
         <textarea
           class="w-100"
-          rows="3"
+          rows="2"
           v-model="user.user_desc"
           placeholder="Masukkan deskripsi singkat"
         ></textarea>
+        <label>My location</label>
+        <GmapMap
+          :center="coordinate"
+          :zoom="10"
+          map-type-id="terrain"
+          style="margin-left: 10px; width: 400px; height: 150px"
+        >
+          <GmapMarker
+            :position="coordinate"
+            :clickable="true"
+            :draggable="true"
+            @click="clickMarker"
+            icon="https://img.icons8.com/color/48/000000/map-pin.png
+"
+          />
+        </GmapMap>
+        <br />
         <div class="centered">
           <button class="upload-img" @click.prevent="updateProfile()">
             Update profile
@@ -85,6 +102,27 @@
 import { mapActions, mapGetters } from "vuex";
 export default {
   name: "Profile",
+  data() {
+    return {
+      coordinate: {
+        lat: 10,
+        lng: 10
+      }
+    };
+  },
+  created() {
+    this.$getLocation()
+      .then(coordinates => {
+        this.coordinate = {
+          lat: coordinates.lat,
+          lng: coordinates.lng
+        };
+        console.log(coordinates);
+      })
+      .catch(error => {
+        alert(error);
+      });
+  },
   mounted() {
     this.getUserByEmail();
   },
@@ -104,6 +142,8 @@ export default {
       data.append("user_phone", user_phone);
       data.append("user_image", user_image);
       data.append("user_desc", user_desc);
+      data.append("user_lat", this.coordinate.lat);
+      data.append("user_lng", this.coordinate.lng);
       for (var pair of data.entries()) {
         console.log(pair[0] + ", " + pair[1]);
       }
@@ -118,6 +158,12 @@ export default {
     handleFile(event) {
       console.log(event);
       this.user.user_image = event.target.files[0];
+    },
+    clickMarker(position) {
+      this.coordinate = {
+        lat: position.latLng.lat(),
+        lng: position.latLng.lng()
+      };
     },
     chooseFile() {
       document.getElementById("fileUpload").click();

@@ -6,9 +6,9 @@
           ><router-link to="/"
             ><h4><b-icon icon="chevron-left"></b-icon></h4></router-link
         ></b-col>
-        <b-col cols="10"><h4>Register</h4></b-col>
+        <b-col cols="10"><h4 class="f-bold">Register</h4></b-col>
       </b-row>
-      <p class="mt-4"><strong>Let's create your account !</strong></p>
+      <p class="mt-4">Let's create your account !</p>
       <b-form @submit.prevent="onSubmit">
         <b-form-group
           id="input-group-1"
@@ -53,12 +53,10 @@
           ></b-form-input>
         </b-form-group>
         <br />
-        <b-button type="submit" class="submit"
-          ><strong>Register</strong></b-button
-        >
+        <b-button type="submit" class="submit">Register</b-button>
         <h6><span>Register with</span></h6>
         <b-button type="google" class="google" @click.prevent="googleReg()"
-          ><b-icon icon="google"></b-icon><strong> Google</strong></b-button
+          ><b-icon icon="google"></b-icon> Google</b-button
         >
       </b-form>
     </b-container>
@@ -121,7 +119,6 @@ export default {
 }
 h4 {
   color: #7e98df;
-  font-weight: bold;
 }
 button {
   width: 100%;

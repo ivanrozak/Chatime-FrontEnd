@@ -3,13 +3,13 @@
     <b-container class="register">
       <b-row class="text-center">
         <b-col cols="1"
-          ><router-link to="/loginpage"
+          ><router-link to="/"
             ><h4><b-icon icon="chevron-left"></b-icon></h4></router-link
         ></b-col>
-        <b-col cols="10"><h4>Forgot Password</h4></b-col>
+        <b-col cols="10"><h4 class="f-bold">Forgot Password</h4></b-col>
       </b-row>
       <p class="mt-5">
-        <strong>You'll got message soon on your e-mail</strong>
+        You'll got message soon on your e-mail
       </p>
       <b-form @submit.prevent="onSubmit">
         <b-form-group
@@ -26,7 +26,7 @@
           ></b-form-input>
         </b-form-group>
         <br />
-        <b-button type="submit" class="submit"><strong>Send</strong></b-button>
+        <b-button type="submit" class="submit">Send</b-button>
       </b-form>
     </b-container>
   </div>
@@ -51,7 +51,6 @@
 }
 h4 {
   color: #7e98df;
-  font-weight: bold;
 }
 button {
   width: 100%;
